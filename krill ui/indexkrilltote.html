@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bundle Builder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .subscription-ui {
+        --primary-color: #123456;
+        --secondary-color: #004175;
+        --accent-color: #ff9900;
+        --background-color: #f9f9f9;
+        --light-grey: #eef3fa;
+        --green: #50c878;
+      }
+
+      .subscription-ui {
+        font-family: "Poppins", sans-serif;
+      }
+
+      .subscription-ui * {
+        box-sizing: border-box;
+      }
+
+      .subscription-ui .container {
+        max-width: 1600px;
+        margin: 40px auto;
+        padding: 0 15px;
+        display: flex;
+      }
+
+      .subscription-ui .image-container {
+        flex: 1.5;
+        margin-right: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .subscription-ui .image-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      .subscription-ui .content {
+        flex: 1.5;
+      }
+
+      .subscription-ui .section {
+        margin-bottom: 20px;
+      }
+
+      .subscription-ui .step {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .subscription-ui .step-circle {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .subscription-ui .step-title {
+        margin-left: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .subscription-ui .options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .subscription-ui .options button {
+        border: 2px solid var(--primary-color);
+        border-radius: 10px; /* Reduce corner roundness */
+        padding: 10px 15px; /* Decrease padding */
+        cursor: pointer;
+        color: var(--primary-color);
+        background-color: var(--background-color);
+        transition: transform 0.2s, box-shadow 0.3s, background-color 0.2s;
+        text-align: center;
+        white-space: nowrap;
+        font-size: 18px; /* Decrease font size */
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .subscription-ui .options button:hover {
+        background-color: var(--light-grey);
+        color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .subscription-ui .options button.active {
+        border: 3px solid var(--secondary-color) !important;
+        background-color: var(--light-grey);
+        color: var(--secondary-color);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .subscription-ui .card {
+        border: 3px solid var(--primary-color);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 10px;
+        position: relative;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        text-align: left;
+        transition: opacity 0.2s;
+      }
+
+      .subscription-ui .card:hover {
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .subscription-ui .card.inactive {
+        opacity: 0.5;
+      }
+
+      .subscription-ui .subscribe {
+        background-color: #f0f8ff;
+      }
+
+      .subscription-ui .discount {
+        background-color: var(--green);
+        color: white;
+        padding: 5px 10px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px 5px 0px 0px;
+        position: absolute;
+        top: -38px;
+        right: 10px;
+      }
+
+      .subscription-ui .price {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--secondary-color);
+        position: absolute;
+        right: 20px;
+        top: 12px;
+      }
+
+      .subscription-ui .original-price {
+        color: grey;
+        text-decoration: line-through;
+        font-weight: normal;
+        font-size: 16px;
+        margin-right: 5px;
+        top: 3px;
+      }
+
+      .subscription-ui .savings {
+        font-size: 16px;
+        color: white;
+        background-color: var(--green);
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: inline-block;
+        margin-top: 30px;
+        font-weight: bold;
+        text-align: center;
+        position: relative;
+      }
+
+      .subscription-ui .checkmark-list {
+        list-style: none;
+        padding: 0;
+        margin-left: 20px;
+        margin-top: 10px;
+      }
+
+      .subscription-ui .checkmark-list li::before {
+        content: "\2713";
+        color: var(--primary-color);
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-right: 8px;
+      }
+
+      .subscription-ui #onetime-message {
+        font-size: 14px;
+        color: #333;
+        margin-top: 10px;
+        line-height: 1.8;
+        padding: 10px 0;
+      }
+
+      .subscription-ui .hidden {
+        display: none;
+      }
+
+      .subscription-ui .message-divider {
+        border: none;
+        border-top: 1px solid #ccc;
+        margin: 5px 0;
+      }
+
+      .subscription-ui #subscribe-collapsed,
+      #onetime-collapsed {
+        font-size: 16px;
+        color: #555;
+        display: none;
+        padding-top: 10px;
+      }
+
+      .subscription-ui .radio-group {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      .subscription-ui .radio-group input[type="radio"] {
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        border: 2px solid var(--secondary-color);
+        border-radius: 50%;
+        background-color: white;
+        position: relative;
+        margin-right: 10px;
+        cursor: pointer;
+        outline: none;
+        transition: box-shadow 0.2s, transform 0.2s;
+        margin-top: 2px;
+      }
+
+      .subscription-ui .radio-group input[type="radio"]::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        background-color: transparent;
+        border-radius: 50%;
+        transition: background-color 0.3s;
+      }
+
+      .subscription-ui .radio-group input[type="radio"]:checked::before {
+        background-color: var(--secondary-color) !important;
+      }
+
+      .subscription-ui .radio-group input[type="radio"]:hover {
+        box-shadow: 0 0 5px rgba(0, 65, 117, 0.5);
+      }
+
+      .subscription-ui .radio-group label {
+        flex-grow: 1;
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+
+      /* Ensure specificity to prevent conflicts */
+      .subscription-ui .radio-group input[type="radio"]:checked::before {
+        background-color: var(--secondary-color) !important;
+      }
+
+      .subscription-ui .subscribe-label-wrapper {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .subscription-ui .cart-button {
+        background-color: var(--accent-color);
+        color: white;
+        padding: 20px 20px;
+        border: none;
+        border-radius: 30px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        width: 100%;
+        transition: background-color 0.3s, transform 0.2s;
+      }
+
+      .subscription-ui .cart-button:hover {
+        background-color: #e68a00;
+        transform: scale(1.05);
+      }
+
+      .subscription-ui .supply-text {
+        display: block;
+        font-size: 14px;
+        font-weight: normal;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      @media (max-width: 600px) {
+        .subscription-ui .container {
+          flex-direction: column;
+          padding: 0 10px;
+        }
+
+        .subscription-ui .image-container {
+          flex: none;
+          margin-right: 0;
+          margin-bottom: 20px;
+        }
+
+        .subscription-ui .image-container img {
+          max-width: 100%;
+          height: auto;
+        }
+
+        .subscription-ui .content {
+          flex: none;
+          width: 100%;
+        }
+
+        .subscription-ui .options {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+
+        .subscription-ui .options button {
+          padding: 8px 12px;
+          font-size: 14px;
+          border-radius: 8px;
+        }
+
+        .subscription-ui .card {
+          padding: 15px;
+        }
+
+        .subscription-ui .price {
+          font-size: 18px;
+          top: 12px;
+          right: 10px;
+        }
+
+        .subscription-ui .discount {
+          top: -30px;
+          right: 5px;
+          font-size: 14px;
+          padding: 3px 8px;
+        }
+
+        .subscription-ui .step-title {
+          font-size: 18px;
+        }
+
+        .subscription-ui .step-circle {
+          width: 35px;
+          height: 35px;
+          font-size: 14px;
+        }
+
+        .subscription-ui .additional-text {
+          font-size: 14px;
+          line-height: 1.4;
+        }
+
+        .subscription-ui .radio-group {
+          flex-direction: row;
+          align-items: flex-start;
+          width: 100%;
+        }
+
+        .subscription-ui .radio-group input[type="radio"] {
+          width: 20px;
+          height: 20px;
+          margin-top: 2px;
+        }
+
+        .subscription-ui .radio-group input[type="radio"]::before {
+          width: 10px;
+          height: 10px;
+        }
+
+        .subscription-ui .radio-group label {
+          margin-left: 0;
+          font-size: 16px;
+          line-height: 1.2;
+        }
+
+        .subscription-ui #onetime-card label {
+          display: block;
+          text-align: left;
+        }
+
+        .subscription-ui #onetime-card label .mobile-break {
+          display: block;
+        }
+
+        .subscription-ui .checkmark-list {
+          margin-left: 0;
+        }
+
+        .subscription-ui .checkmark-list li {
+          position: relative;
+          padding-left: 1.5em; /* Space for the checkmark */
+          line-height: 1.4; /* Adjust line spacing as needed */
+        }
+
+        .subscription-ui .checkmark-list li::before {
+          content: "\2713"; /* Checkmark symbol */
+          color: var(--primary-color);
+          font-weight: bold;
+          display: inline-block;
+          width: 1em; /* Aligns with padding-left of li */
+          position: absolute;
+          left: 0;
+        }
+        .subscription-ui .price {
+          font-size: 15px;
+          margin-left: auto;
+          position: absolute;
+          right: 10px;
+          top: 12px;
+        }
+
+        .subscription-ui .savings {
+          font-size: 14px;
+          padding: 4px 8px;
+          border-radius: 8px;
+          margin-top: 22px;
+          margin-bottom: 5px;
+          display: block;
+          margin-left: auto;
+          position: relative;
+          left: 10px;
+        }
+
+        .subscription-ui .price {
+          margin-bottom: 5px;
+        }
+
+        .subscription-ui .original-price {
+          font-size: 14px;
+        }
+
+        .subscription-ui .mobile-break {
+          display: block;
+        }
+      }
+
+      .subscription-ui .mobile-break {
+        display: inline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="subscription-ui">
+      <div class="container">
+        <!-- Image Container -->
+        <div class="image-container">
+          <img id="product-image" src="1.png" alt="Product Image" />
+        </div>
+        <div class="content">
+          <div class="section">
+            <div class="step">
+              <div class="step-circle">1</div>
+              <div class="step-title">Select Quantity</div>
+            </div>
+            <div class="options" id="quantity-options">
+              <button
+                data-quantity="1"
+                data-image="https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Krill_1_tote.png?v=1738849417"
+              >
+                1 Bottle
+                <span class="mobile-break"><br />+ FREE Canvas Tote</span>
+                <br /><span class="supply-text">1 month supply</span>
+              </button>
+              <button
+                data-quantity="3"
+                data-image="https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Krill_3_tote.png?v=1738792544"
+              >
+                3 Bottles
+                <span class="mobile-break"><br />+ FREE Canvas Tote</span>
+                <br /><span class="supply-text">3 month supply</span>
+              </button>
+              <button
+                data-quantity="6"
+                data-image="https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Krill_6_tote.png?v=1738792544"
+              >
+                6 Bottles
+                <span class="mobile-break"><br />+ FREE Canvas Tote</span>
+                <br /><span class="supply-text">6 month supply</span>
+              </button>
+              <button
+                data-quantity="12"
+                data-image="https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Krill_12_tote.png?v=1738792544"
+              >
+                12 Bottles
+                <span class="mobile-break"><br />+ FREE Canvas Tote</span>
+                <br /><span class="supply-text">12 month supply</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="step">
+              <div class="step-circle">2</div>
+              <div class="step-title">Purchase Type</div>
+            </div>
+            <div class="card subscribe" id="subscribe-card">
+              <div class="radio-group">
+                <input
+                  type="radio"
+                  name="purchase-type"
+                  id="subscribe"
+                  checked
+                />
+                <div class="subscribe-label-wrapper">
+                  <label for="subscribe">Subscribe & Save</label>
+                  <span class="additional-text"
+                    >Save Up To 69%<br />On Every Order</span
+                  >
+                </div>
+                <span class="price">
+                  <span class="original-price">$57.00</span>$37.00
+                </span>
+              </div>
+              <div id="subscribe-collapsed" class="hidden">You Save 10%</div>
+              <div id="subscribe-expanded">
+                <span class="discount">You Save 10%</span>
+                <br />
+
+                <ul class="checkmark-list">
+                  <li>Cancel Anytime - No Commitment</li>
+                  <li>Receive Free Shipping On Every Order</li>
+                  <li>You're Covered By Our 365-Day Feel Good Guarantee</li>
+                </ul>
+              </div>
+            </div>
+            <div class="card" id="onetime-card">
+              <div class="radio-group">
+                <input type="radio" name="purchase-type" id="onetime" />
+                <label for="onetime"
+                  >One-Time<span class="mobile-break"> Purchase</span></label
+                >
+                <span class="price"
+                  ><span class="original-price">$57.00</span>$37.00</span
+                >
+                <span class="savings" id="savings-amount"></span>
+              </div>
+              <div id="onetime-collapsed" class="hidden"></div>
+              <div id="onetime-message" class="hidden">
+                <hr class="message-divider" />
+                ⚠️ You're up to 70% more likely to see intended benefits through
+                daily, consistent supplement use. A NativePath subscription
+                simplifies your supplement routine and helps you save more.
+              </div>
+            </div>
+          </div>
+          <div class="section" id="cart-section">
+            <button id="add-to-cart" class="cart-button">Add To Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const initializeBlocks = () => {
+          const blocks = document.querySelectorAll(
+            ".subscription-ui .container"
+          ); // Select blocks within `.subscription-ui`
+          if (!blocks.length) return;
+
+          blocks.forEach((block, index) => {
+            // Select elements within each block
+            const quantityOptions = block.querySelector("#quantity-options");
+            const buttons = Array.from(
+              quantityOptions.querySelectorAll("button")
+            );
+            const productImage = block.querySelector("#product-image");
+
+            const subscribeRadio = block.querySelector("#subscribe");
+            const onetimeRadio = block.querySelector("#onetime");
+            const subscribeCard = block.querySelector("#subscribe-card");
+            const onetimeCard = block.querySelector("#onetime-card");
+            const subscribeCollapsed = block.querySelector(
+              "#subscribe-collapsed"
+            );
+            const subscribeExpanded = block.querySelector(
+              "#subscribe-expanded"
+            );
+            const onetimeMessage = block.querySelector("#onetime-message");
+            const addToCartButton = block.querySelector("#add-to-cart");
+            const savingsAmount = block.querySelector("#savings-amount");
+
+            // Unique names for radio buttons
+            const uniqueName = `purchase-type-${index}`;
+            subscribeRadio.name = uniqueName;
+            onetimeRadio.name = uniqueName;
+
+            const updatePrices = (quantity) => {
+              const subscribePrices = {
+                1: 37.0,
+                3: 78.98,
+                6: 120.0,
+                12: 207.96,
+              };
+              const onetimePrices = {
+                1: 37.0,
+                3: 90.0,
+                6: 138.0,
+                12: 228.0,
+              };
+              const onetimeOriginalPrices = {
+                1: 57.0,
+                3: 171.0,
+                6: 342.0,
+                12: 684.0,
+              };
+
+              const subscribePrice = subscribeCard.querySelector(".price");
+              const onetimePrice = onetimeCard.querySelector(".price");
+
+              const percentOff = Math.floor(
+                ((onetimeOriginalPrices[quantity] - subscribePrices[quantity]) /
+                  onetimeOriginalPrices[quantity]) *
+                  100
+              );
+
+              const savings =
+                onetimeOriginalPrices[quantity] - onetimePrices[quantity];
+
+              subscribePrice.innerHTML = `
+                    <span class="original-price">$${onetimeOriginalPrices[
+                      quantity
+                    ].toFixed(2)}</span>
+                    $${subscribePrices[quantity].toFixed(2)}
+                `;
+              onetimePrice.innerHTML = `
+                    <span class="original-price">$${onetimeOriginalPrices[
+                      quantity
+                    ].toFixed(2)}</span>
+                    $${onetimePrices[quantity].toFixed(2)}
+                `;
+              block.querySelector(
+                ".discount"
+              ).textContent = `You Save ${percentOff}%`;
+
+              // Update the green "save $" text
+              if (savingsAmount) {
+                savingsAmount.textContent = `You save $${savings.toFixed(2)}`;
+              }
+            };
+
+            const updateImage = (quantity) => {
+              const imageMap = {
+                1: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Krill_1_tote.png?v=1738849417",
+                3: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Krill_3_tote.png?v=1738792544",
+                6: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Krill_6_tote.png?v=1738792544",
+                12: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Krill_12_tote.png?v=1738792544",
+              };
+              if (imageMap[quantity] && productImage) {
+                productImage.src = imageMap[quantity]; // Update the image source dynamically
+              }
+            };
+
+            const handleQuantityChange = (quantity) => {
+              buttons.forEach((btn) => {
+                if (btn.getAttribute("data-quantity") === quantity) {
+                  btn.classList.add("active");
+                } else {
+                  btn.classList.remove("active");
+                }
+              });
+
+              updateImage(quantity);
+              updatePrices(quantity);
+            };
+
+            const updateSubscriptionState = () => {
+              if (subscribeRadio.checked) {
+                subscribeExpanded.classList.remove("hidden");
+                subscribeCollapsed.classList.add("hidden");
+                onetimeMessage.classList.add("hidden");
+                subscribeCard.classList.remove("inactive");
+                onetimeCard.classList.add("inactive");
+              } else if (onetimeRadio.checked) {
+                subscribeExpanded.classList.add("hidden");
+                subscribeCollapsed.classList.remove("hidden");
+                onetimeMessage.classList.remove("hidden");
+                subscribeCard.classList.add("inactive");
+                onetimeCard.classList.remove("inactive");
+              }
+            };
+
+            const setInitialState = () => {
+              subscribeRadio.checked = true; // Ensure Subscribe & Save is selected
+              subscribeRadio.dispatchEvent(new Event("change")); // Trigger change event
+              const defaultButton = buttons[0];
+              if (defaultButton) {
+                handleQuantityChange(
+                  defaultButton.getAttribute("data-quantity")
+                );
+              }
+            };
+
+            // Event Listeners
+            quantityOptions.addEventListener("click", (event) => {
+              const button = event.target.closest("button");
+              if (!button) return;
+
+              const quantity = button.getAttribute("data-quantity");
+              handleQuantityChange(quantity);
+            });
+
+            subscribeRadio.addEventListener("change", updateSubscriptionState);
+            onetimeRadio.addEventListener("change", updateSubscriptionState);
+
+            addToCartButton.addEventListener("click", () => {
+              const urls = {
+                subscribe: {
+                  1: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=32286231920777%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%5Bselling_plan%5D=4799299721%26items%5B%5D%5Bid%5D=40740241768585%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%26return_to=/checkout",
+                  3: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=32286231920777%26items%5B%5D%5Bquantity%5D=3%26items%5B%5D%5Bselling_plan%5D=4799332489%26items%5B%5D%5Bid%5D=40740241768585%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%26return_to=/checkout",
+                  6: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=32286231920777%26items%5B%5D%5Bquantity%5D=6%26items%5B%5D%5Bselling_plan%5D=4799398025%26items%5B%5D%5Bid%5D=40740241768585%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%26return_to=/checkout",
+                  12: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=32286231920777%26items%5B%5D%5Bquantity%5D=12%26items%5B%5D%5Bselling_plan%5D=4799365257%26items%5B%5D%5Bid%5D=40740241768585%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%26return_to=/checkout",
+                },
+                onetime: {
+                  1: "https://secure.nativepath.com/checkout-nativepath-antarctic-krill-oil-special-offer-571-otp-1?products=10802:1;12570:1",
+                  3: "https://secure.nativepath.com/checkout-nativepath-antarctic-krill-oil-special-offer-571-otp-3?products=10868:1;12570:1",
+                  6: "https://secure.nativepath.com/checkout-nativepath-antarctic-krill-oil-special-offer-571-otp-6?products=10869:1;12570:1",
+                  12: "https://secure.nativepath.com/checkout-nativepath-antarctic-krill-oil-special-offer-571-otp-12?products=13105:1;12570:1",
+                },
+              };
+
+              const activeButton = buttons.find((btn) =>
+                btn.classList.contains("active")
+              );
+              const quantity = activeButton
+                ? activeButton.getAttribute("data-quantity")
+                : frequencySelect.value;
+              const purchaseType = subscribeRadio.checked
+                ? "subscribe"
+                : "onetime";
+
+              window.location.href = urls[purchaseType][quantity];
+            });
+
+            setInitialState(); // Initialize the block
+          });
+        };
+
+        setTimeout(initializeBlocks, 200); // Allow time for Instapage DOM to load
+      });
+    </script>
+  </body>
+</html>
