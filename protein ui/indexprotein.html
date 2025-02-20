@@ -9,7 +9,7 @@
       rel="stylesheet"
     />
     <style>
-      :root {
+      .subscription-ui {
         --primary-color: #123456;
         --secondary-color: #004175;
         --accent-color: #ff9900;
@@ -542,15 +542,6 @@
                 6 Bags
                 <br /><span class="supply-text">6 month supply</span>
               </button>
-
-              <button
-                data-quantity="12"
-                data-vanilla="https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_12.png?v=1738960571"
-                data-chocolate="https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_12.png?v=1738959537"
-              >
-                12 Bags
-                <br /><span class="supply-text">12 month supply</span>
-              </button>
             </div>
           </div>
 
@@ -664,59 +655,43 @@
                 1: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_1.png?v=1738960571",
                 3: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_3.png?v=1738960571",
                 6: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_6.png?v=1738960571",
-                12: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_12.png?v=1738960571",
               },
               chocolate: {
                 1: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_1.png?v=1738959537",
                 3: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_3.png?v=1738959536",
                 6: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_6.png?v=1738959537",
-                12: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_12.png?v=1738959537",
               },
             };
 
             // Pricing details
-            const subscribePrices = {
-              1: 57.79,
-              3: 135.03,
-              6: 212.1,
-              12: 390.0,
-            };
-            const onetimePrices = { 1: 59.0, 3: 147.0, 6: 234.0, 12: 420.0 };
-            const onetimeOriginalPrices = {
-              1: 67.99,
-              3: 203.97,
-              6: 407.94,
-              12: 815.88,
-            };
+            const subscribePrices = { 1: 89.0, 3: 189.0, 6: 348.0 };
+            const onetimePrices = { 1: 99.0, 3: 594.0, 6: 297.0 };
+            const onetimeOriginalPrices = { 1: 67.99, 3: 203.97, 6: 407.94 };
 
             // Cart URLs
             const urls = {
               vanilla: {
                 subscribe: {
-                  1: "URL_FOR_VANILLA_SUBSCRIBE_1",
-                  3: "URL_FOR_VANILLA_SUBSCRIBE_3",
-                  6: "URL_FOR_VANILLA_SUBSCRIBE_6",
-                  12: "URL_FOR_VANILLA_SUBSCRIBE_12",
+                  1: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%5Bselling_plan%5D=4800512137%26return_to=/checkout",
+                  3: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=3%26items%5B%5D%5Bselling_plan%5D=4800544905%26return_to=/checkout",
+                  6: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=6%26items%5B%5D%5Bselling_plan%5D=4800577673%26return_to=/checkout",
                 },
                 onetime: {
                   1: "URL_FOR_VANILLA_ONETIME_1",
                   3: "URL_FOR_VANILLA_ONETIME_3",
                   6: "URL_FOR_VANILLA_ONETIME_6",
-                  12: "URL_FOR_VANILLA_ONETIME_12",
                 },
               },
               chocolate: {
                 subscribe: {
-                  1: "URL_FOR_CHOCOLATE_SUBSCRIBE_1",
-                  3: "URL_FOR_CHOCOLATE_SUBSCRIBE_3",
-                  6: "URL_FOR_CHOCOLATE_SUBSCRIBE_6",
-                  12: "URL_FOR_CHOCOLATE_SUBSCRIBE_12",
+                  1: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%5Bselling_plan%5D=4800413833%26return_to=/checkout",
+                  3: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=3%26items%5B%5D%5Bselling_plan%5D=4800446601%26return_to=/checkout",
+                  6: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=6%26items%5B%5D%5Bselling_plan%5D=4800479369%26return_to=/checkout",
                 },
                 onetime: {
                   1: "URL_FOR_CHOCOLATE_ONETIME_1",
                   3: "URL_FOR_CHOCOLATE_ONETIME_3",
                   6: "URL_FOR_CHOCOLATE_ONETIME_6",
-                  12: "URL_FOR_CHOCOLATE_ONETIME_12",
                 },
               },
             };
