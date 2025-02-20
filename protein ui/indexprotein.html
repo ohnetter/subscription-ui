@@ -609,223 +609,237 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const initializeBlocks = () => {
-          const blocks = document.querySelectorAll(
-            ".subscription-ui .container"
-          ); // Select blocks within .subscription-ui
-          if (!blocks.length) return;
+          document
+            .querySelectorAll(".subscription-ui .container")
+            .forEach((block, index) => {
+              // Assign a unique ID to each block
+              const uniqueID = `subscription-${index}`;
+              block.setAttribute("data-subscription-id", uniqueID);
 
-          blocks.forEach((block, index) => {
-            // Select elements within each block
-            const quantityOptions = block.querySelector("#quantity-options");
-            const quantityButtons = Array.from(
-              quantityOptions.querySelectorAll("button")
-            );
-            const flavorOptions = block.querySelector("#flavor-options");
-            const flavorButtons = Array.from(
-              flavorOptions.querySelectorAll("button")
-            );
-            const productImage = block.querySelector("#product-image");
-
-            const subscribeRadio = block.querySelector("#subscribe");
-            const onetimeRadio = block.querySelector("#onetime");
-            const subscribeCard = block.querySelector("#subscribe-card");
-            const onetimeCard = block.querySelector("#onetime-card");
-            const subscribeCollapsed = block.querySelector(
-              "#subscribe-collapsed"
-            );
-            const subscribeExpanded = block.querySelector(
-              "#subscribe-expanded"
-            );
-            const onetimeMessage = block.querySelector("#onetime-message");
-            const addToCartButton = block.querySelector("#add-to-cart");
-            const savingsAmount = block.querySelector("#savings-amount");
-
-            let selectedFlavor = "vanilla";
-            let selectedQuantity = "1";
-            let purchaseType = "subscribe";
-
-            // Unique names for radio buttons
-            const uniqueName = `purchase-type-${index}`;
-            subscribeRadio.name = uniqueName;
-            onetimeRadio.name = uniqueName;
-
-            // Image sources
-            const imageMap = {
-              vanilla: {
-                1: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_1.png?v=1738960571",
-                3: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_3.png?v=1738960571",
-                6: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_6.png?v=1738960571",
-              },
-              chocolate: {
-                1: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_1.png?v=1738959537",
-                3: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_3.png?v=1738959536",
-                6: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_6.png?v=1738959537",
-              },
-            };
-
-            // Pricing details
-            const subscribePrices = { 1: 89.0, 3: 189.0, 6: 348.0 };
-            const onetimePrices = { 1: 99.0, 3: 594.0, 6: 297.0 };
-            const onetimeOriginalPrices = { 1: 67.99, 3: 203.97, 6: 407.94 };
-
-            // Cart URLs
-            const urls = {
-              vanilla: {
-                subscribe: {
-                  1: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%5Bselling_plan%5D=4800512137%26return_to=/checkout",
-                  3: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=3%26items%5B%5D%5Bselling_plan%5D=4800544905%26return_to=/checkout",
-                  6: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=6%26items%5B%5D%5Bselling_plan%5D=4800577673%26return_to=/checkout",
-                },
-                onetime: {
-                  1: "URL_FOR_VANILLA_ONETIME_1",
-                  3: "URL_FOR_VANILLA_ONETIME_3",
-                  6: "URL_FOR_VANILLA_ONETIME_6",
-                },
-              },
-              chocolate: {
-                subscribe: {
-                  1: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%5Bselling_plan%5D=4800413833%26return_to=/checkout",
-                  3: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=3%26items%5B%5D%5Bselling_plan%5D=4800446601%26return_to=/checkout",
-                  6: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=6%26items%5B%5D%5Bselling_plan%5D=4800479369%26return_to=/checkout",
-                },
-                onetime: {
-                  1: "URL_FOR_CHOCOLATE_ONETIME_1",
-                  3: "URL_FOR_CHOCOLATE_ONETIME_3",
-                  6: "URL_FOR_CHOCOLATE_ONETIME_6",
-                },
-              },
-            };
-
-            // Update product image based on flavor and quantity selection
-            const updateImage = () => {
-              const selectedButton = quantityOptions.querySelector(
-                `button[data-quantity="${selectedQuantity}"]`
+              // Select elements only within this specific block
+              const quantityOptions = block.querySelector("#quantity-options");
+              const flavorOptions = block.querySelector("#flavor-options");
+              const productImage = block.querySelector("#product-image");
+              const subscribeRadio = block.querySelector("#subscribe");
+              const onetimeRadio = block.querySelector("#onetime");
+              const subscribeCard = block.querySelector("#subscribe-card");
+              const onetimeCard = block.querySelector("#onetime-card");
+              const subscribeCollapsed = block.querySelector(
+                "#subscribe-collapsed"
               );
+              const subscribeExpanded = block.querySelector(
+                "#subscribe-expanded"
+              );
+              const onetimeMessage = block.querySelector("#onetime-message");
+              const addToCartButton = block.querySelector("#add-to-cart");
+              const savingsAmount = block.querySelector("#savings-amount");
 
-              if (selectedButton) {
-                const imageUrl = selectedButton.getAttribute(
-                  `data-${selectedFlavor}`
+              let selectedFlavor = "vanilla";
+              let selectedQuantity = "6"; // Default to 6 Bags
+              let purchaseType = "subscribe"; // Default to Subscribe & Save
+
+              // Ensure unique radio names
+              const uniqueName = `purchase-type-${uniqueID}`;
+              subscribeRadio.name = uniqueName;
+              onetimeRadio.name = uniqueName;
+
+              // Image sources
+              const imageMap = {
+                vanilla: {
+                  1: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_1.png?v=1738960571",
+                  3: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_3.png?v=1738960571",
+                  6: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Vanilla_Protein_6.png?v=1738960571",
+                },
+                chocolate: {
+                  1: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_1.png?v=1738959537",
+                  3: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_3.png?v=1738959536",
+                  6: "https://cdn.shopify.com/s/files/1/0014/0158/5725/files/Chocolate_Protein_6.png?v=1738959537",
+                },
+              };
+
+              // Pricing details
+              const subscribePrices = { 1: 89.0, 3: 189.0, 6: 348.0 };
+              const onetimePrices = { 1: 99.0, 3: 594.0, 6: 297.0 };
+              const onetimeOriginalPrices = { 1: 67.99, 3: 203.97, 6: 407.94 };
+
+              // Cart URLs
+              const urls = {
+                vanilla: {
+                  subscribe: {
+                    1: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%5Bselling_plan%5D=4800512137%26return_to=/checkout",
+                    3: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=3%26items%5B%5D%5Bselling_plan%5D=4800544905%26return_to=/checkout",
+                    6: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143944962185%26items%5B%5D%5Bquantity%5D=6%26items%5B%5D%5Bselling_plan%5D=4800577673%26return_to=/checkout",
+                  },
+                  onetime: {
+                    1: "URL_FOR_VANILLA_ONETIME_1",
+                    3: "URL_FOR_VANILLA_ONETIME_3",
+                    6: "URL_FOR_VANILLA_ONETIME_6",
+                  },
+                },
+                chocolate: {
+                  subscribe: {
+                    1: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=1%26items%5B%5D%5Bselling_plan%5D=4800413833%26return_to=/checkout",
+                    3: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=3%26items%5B%5D%5Bselling_plan%5D=4800446601%26return_to=/checkout",
+                    6: "https://shop.nativepath.com/cart/clear?return_to=/cart/add?items%5B%5D%5Bid%5D=43143947911305%26items%5B%5D%5Bquantity%5D=6%26items%5B%5D%5Bselling_plan%5D=4800479369%26return_to=/checkout",
+                  },
+                  onetime: {
+                    1: "URL_FOR_CHOCOLATE_ONETIME_1",
+                    3: "URL_FOR_CHOCOLATE_ONETIME_3",
+                    6: "URL_FOR_CHOCOLATE_ONETIME_6",
+                  },
+                },
+              };
+
+              // Update product image based on flavor and quantity selection
+              const updateImage = () => {
+                productImage.src = imageMap[selectedFlavor][selectedQuantity];
+              };
+
+              // Update price details
+              const updatePrices = () => {
+                const subscribePrice = subscribeCard.querySelector(".price");
+                const onetimePrice = onetimeCard.querySelector(".price");
+
+                const percentOff = Math.floor(
+                  ((onetimeOriginalPrices[selectedQuantity] -
+                    subscribePrices[selectedQuantity]) /
+                    onetimeOriginalPrices[selectedQuantity]) *
+                    100
                 );
-                productImage.src = imageUrl;
-              }
-            };
+                const savings =
+                  onetimeOriginalPrices[selectedQuantity] -
+                  onetimePrices[selectedQuantity];
 
-            // Update price details
-            const updatePrices = () => {
-              const subscribePrice = subscribeCard.querySelector(".price");
-              const onetimePrice = onetimeCard.querySelector(".price");
+                subscribePrice.innerHTML = `
+          <span class="original-price">$${onetimeOriginalPrices[
+            selectedQuantity
+          ].toFixed(2)}</span>
+          $${subscribePrices[selectedQuantity].toFixed(2)}
+        `;
+                onetimePrice.innerHTML = `
+          <span class="original-price">$${onetimeOriginalPrices[
+            selectedQuantity
+          ].toFixed(2)}</span>
+          $${onetimePrices[selectedQuantity].toFixed(2)}
+        `;
+                block.querySelector(
+                  ".discount"
+                ).textContent = `You Save ${percentOff}%`;
 
-              const percentOff = Math.round(
-                ((onetimeOriginalPrices[selectedQuantity] -
-                  subscribePrices[selectedQuantity]) /
-                  onetimeOriginalPrices[selectedQuantity]) *
-                  100
+                if (savingsAmount) {
+                  savingsAmount.textContent = `You save $${savings.toFixed(2)}`;
+                }
+              };
+
+              // Handle quantity selection
+              quantityOptions.addEventListener("click", (event) => {
+                const button = event.target.closest("button");
+                if (button) {
+                  selectedQuantity = button.getAttribute("data-quantity");
+                  block
+                    .querySelectorAll("button[data-quantity]")
+                    .forEach((btn) =>
+                      btn.classList.toggle("active", btn === button)
+                    );
+                  updateImage();
+                  updatePrices();
+                }
+              });
+
+              // Handle flavor selection
+              flavorOptions.addEventListener("click", (event) => {
+                const button = event.target.closest("button");
+                if (button) {
+                  selectedFlavor = button.getAttribute("data-flavor");
+                  block
+                    .querySelectorAll("button[data-flavor]")
+                    .forEach((btn) =>
+                      btn.classList.toggle("active", btn === button)
+                    );
+                  updateImage();
+                }
+              });
+
+              // **Function to update subscription UI**
+              const updateSubscriptionState = () => {
+                purchaseType = subscribeRadio.checked ? "subscribe" : "onetime";
+
+                // Expand/collapse the correct sections
+                subscribeExpanded.classList.toggle(
+                  "hidden",
+                  purchaseType !== "subscribe"
+                );
+                subscribeCollapsed.classList.toggle(
+                  "hidden",
+                  purchaseType === "subscribe"
+                );
+                onetimeMessage.classList.toggle(
+                  "hidden",
+                  purchaseType === "subscribe"
+                );
+
+                // Make inactive state clear
+                subscribeCard.classList.toggle(
+                  "inactive",
+                  purchaseType !== "subscribe"
+                );
+                onetimeCard.classList.toggle(
+                  "inactive",
+                  purchaseType === "subscribe"
+                );
+              };
+
+              // **Ensure event listeners are correctly attached**
+              subscribeRadio.addEventListener(
+                "change",
+                updateSubscriptionState
               );
-              const savings =
-                onetimeOriginalPrices[selectedQuantity] -
-                onetimePrices[selectedQuantity];
+              onetimeRadio.addEventListener("change", updateSubscriptionState);
 
-              subscribePrice.innerHTML = `
-                    <span class="original-price">$${onetimeOriginalPrices[
-                      selectedQuantity
-                    ].toFixed(2)}</span>
-                    $${subscribePrices[selectedQuantity].toFixed(2)}
-                `;
-              onetimePrice.innerHTML = `
-                    <span class="original-price">$${onetimeOriginalPrices[
-                      selectedQuantity
-                    ].toFixed(2)}</span>
-                    $${onetimePrices[selectedQuantity].toFixed(2)}
-                `;
-              block.querySelector(
-                ".discount"
-              ).textContent = `You Save ${percentOff}%`;
+              // **Set initial state on page load**
+              subscribeRadio.checked = true; // Ensure subscription is selected
 
-              if (savingsAmount) {
-                savingsAmount.textContent = `You save $${savings.toFixed(2)}`;
-              }
-            };
+              addToCartButton.addEventListener("click", () => {
+                window.location.href =
+                  urls[selectedFlavor][purchaseType][selectedQuantity];
+              });
 
-            // Handle quantity selection
-            const handleQuantityChange = (quantity) => {
-              selectedQuantity = quantity;
-              quantityButtons.forEach((btn) =>
-                btn.classList.toggle(
-                  "active",
-                  btn.getAttribute("data-quantity") === quantity
-                )
-              );
-              updateImage();
-              updatePrices();
-            };
+              const setInitialState = () => {
+                selectedQuantity = "6"; // Default to 6 Bags
+                selectedFlavor = "vanilla"; // Default to Vanilla
+                purchaseType = "subscribe"; // Default to Subscribe & Save
 
-            // Handle flavor selection
-            const handleFlavorChange = (flavor) => {
-              selectedFlavor = flavor;
-              flavorButtons.forEach((btn) =>
-                btn.classList.toggle(
-                  "active",
-                  btn.getAttribute("data-flavor") === flavor
-                )
-              );
-              updateImage();
-            };
+                // Set active button styles within the current block only
+                block
+                  .querySelectorAll("button[data-quantity]")
+                  .forEach((btn) => {
+                    btn.classList.toggle(
+                      "active",
+                      btn.getAttribute("data-quantity") === selectedQuantity
+                    );
+                  });
+                block.querySelectorAll("button[data-flavor]").forEach((btn) => {
+                  btn.classList.toggle(
+                    "active",
+                    btn.getAttribute("data-flavor") === selectedFlavor
+                  );
+                });
 
-            // Handle subscription selection
-            const updateSubscriptionState = () => {
-              purchaseType = subscribeRadio.checked ? "subscribe" : "onetime";
+                // **Explicitly set the radio button selection**
+                subscribeRadio.checked = true;
+                onetimeRadio.checked = false;
 
-              if (purchaseType === "subscribe") {
-                subscribeExpanded.classList.remove("hidden");
-                subscribeCollapsed.classList.add("hidden");
-                onetimeMessage.classList.add("hidden");
-                subscribeCard.classList.remove("inactive");
-                onetimeCard.classList.add("inactive");
-              } else {
-                subscribeExpanded.classList.add("hidden");
-                subscribeCollapsed.classList.remove("hidden");
-                onetimeMessage.classList.remove("hidden");
-                subscribeCard.classList.add("inactive");
-                onetimeCard.classList.remove("inactive");
-              }
-            };
+                // **Ensures UI updates correctly when page loads**
+                updateImage();
+                updatePrices();
+                updateSubscriptionState(); // **This was missing before**
+              };
 
-            // Initialize selections
-            const setInitialState = () => {
-              subscribeRadio.checked = true;
-              subscribeRadio.dispatchEvent(new Event("change"));
-
-              handleFlavorChange("vanilla");
-              handleQuantityChange("1");
-            };
-
-            // Event Listeners
-            quantityOptions.addEventListener("click", (event) => {
-              const button = event.target.closest("button");
-              if (button)
-                handleQuantityChange(button.getAttribute("data-quantity"));
+              setInitialState(); // Ensure each block initializes correctly
             });
-
-            flavorOptions.addEventListener("click", (event) => {
-              const button = event.target.closest("button");
-              if (button)
-                handleFlavorChange(button.getAttribute("data-flavor"));
-            });
-
-            subscribeRadio.addEventListener("change", updateSubscriptionState);
-            onetimeRadio.addEventListener("change", updateSubscriptionState);
-
-            // Add to cart functionality
-            addToCartButton.addEventListener("click", () => {
-              window.location.href =
-                urls[selectedFlavor][purchaseType][selectedQuantity];
-            });
-
-            setInitialState();
-          });
         };
 
-        setTimeout(initializeBlocks, 200); // Allow time for Instapage DOM to load
+        initializeBlocks(); // Run without setTimeout
       });
     </script>
   </body>
